@@ -10,20 +10,18 @@
     </parent>
 
     <artifactId>adapter-web</artifactId>
-    <name>adapter-web</name>
+    <name>Adapter Web</name>
 
     <dependencies>
 
         <dependency>
             <groupId>art.lapov</groupId>
             <artifactId>domain</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>art.lapov</groupId>
             <artifactId>application</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>

@@ -10,8 +10,6 @@
 
     <artifactId>domain</artifactId>
     <name>domain</name>
+    <description>Core domain - pure Java, no frameworks</description>
 
-    <dependencies>
-
-    </dependencies>
 </project>

@@ -11,11 +11,12 @@
 
     <artifactId>adapters</artifactId>
     <packaging>pom</packaging>
-    <name>adapters</name>
+    <name>Adapters</name>
+    <description>Parent for all adapters</description>
 
     <modules>
         <module>adapter-web</module>
-        <module>adapter-persistence</module>
+        <module>adapter-db</module>
     </modules>
 
 </project>

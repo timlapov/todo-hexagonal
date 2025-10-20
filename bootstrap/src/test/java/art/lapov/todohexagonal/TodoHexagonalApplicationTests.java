@@ -8,6 +8,7 @@ class TodoHexagonalApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
