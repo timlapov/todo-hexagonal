@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>art.lapov</groupId>
+        <artifactId>todo-hexagonal</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>bootstrap</artifactId>
+    <name>Bootstrap</name>
+
+    <dependencies>
+        <!-- All modules -->
+        <dependency>
+            <groupId>art.lapov</groupId>
+            <artifactId>domain</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>art.lapov</groupId>
+            <artifactId>application</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>art.lapov</groupId>
+            <artifactId>adapter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>art.lapov</groupId>
+            <artifactId>adapter-db</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>art.lapov.todohexagonal.TodoHexagonalApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
