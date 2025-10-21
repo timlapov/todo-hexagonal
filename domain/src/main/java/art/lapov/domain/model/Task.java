@@ -10,7 +10,7 @@ public class Task {
     private String status;
     private final Instant createdAt;
     private Instant updatedAt;
-    private UserId userId;
+    private final UserId userId;
 
     public Task(String name, String description, UserId userId) {
         this.id = new TaskId(UUID.randomUUID().toString());
