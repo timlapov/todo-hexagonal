@@ -1,6 +1,5 @@
 package art.lapov.application.service;
 
-import art.lapov.application.dto.CreateTaskRequest;
 import art.lapov.application.mapper.TaskMapper;
 import art.lapov.domain.model.Task;
 import art.lapov.domain.model.TaskId;
@@ -31,7 +30,7 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
     @Override
     public Task createTask(String name, String description, UserId userId) {
         validateCreateRequest(name, userId);
-        Task task = new Task(name, description, userId);
+        Task task = new Task(name, description, userId.toString());
         return taskRepository.save(task);
     }
 

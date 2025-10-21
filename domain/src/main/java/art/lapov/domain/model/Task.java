@@ -12,14 +12,24 @@ public class Task {
     private Instant updatedAt;
     private final UserId userId;
 
-    public Task(String name, String description, UserId userId) {
+    public Task(String name, String description, String userId) {
         this.id = new TaskId(UUID.randomUUID().toString());
         this.name = name;
         this.description = description;
         this.status = TaskStatus.OPEN.name();
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
-        this.userId = userId;
+        this.userId = new UserId(userId);
+    }
+
+    public Task(String id, String name, String description, String status, Instant createdAt, Instant updatedAt, String userId) {
+        this.id = new TaskId(id);
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.userId = new UserId(userId);
     }
 
     public void complete() {
