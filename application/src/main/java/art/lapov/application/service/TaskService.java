@@ -30,7 +30,9 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public Task createTask(String name, String description, UserId userId) {
-        return null;
+        validateCreateRequest(name, userId);
+        Task task = new Task(name, description, userId);
+        return taskRepository.save(task);
     }
 
     @Override
@@ -40,6 +42,9 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public Task getTaskById(TaskId id) {
+        if (id != null) {
+            return taskRepository.getById(id).orElse(null);
+        }
         return null;
     }
 
@@ -50,7 +55,7 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public List<Task> getAllTasks() {
-        return List.of();
+        return taskRepository.getAll();
     }
 
     @Override
@@ -63,11 +68,11 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
         return null;
     }
 
-    private void validateCreateRequest(CreateTaskRequest request) {
-        if (request.getName() == null || request.getName().isBlank()) {
+    private void validateCreateRequest(String name, UserId userId) {
+        if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Task name is required");
         }
-        if (request.getUserId() == null) {
+        if (userId == null) {
             throw new IllegalArgumentException("User id is required");
         }
     }
