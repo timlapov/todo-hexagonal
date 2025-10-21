@@ -23,6 +23,9 @@ public class User {
         this.email = email;
     }
 
+    public User() {
+    }
+
     public UserId getId() {
         return id;
     }

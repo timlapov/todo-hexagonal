@@ -3,9 +3,11 @@ package art.lapov.adapterdb;
 import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.out.UserRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class UserRepositoryAdapter implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
