@@ -1,0 +1,37 @@
+package art.lapov.adapterweb;
+
+import art.lapov.application.dto.UserResponse;
+import art.lapov.application.mapper.UserMapper;
+import art.lapov.domain.model.User;
+import art.lapov.domain.port.in.CreateUserUseCase;
+import art.lapov.domain.port.in.DeleteUserUseCase;
+import art.lapov.domain.port.in.FindUsersUseCase;
+import art.lapov.domain.port.in.UpdateUserUseCase;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final CreateUserUseCase createUserUseCase;
+    private final FindUsersUseCase findUsersUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
+
+    private final UserMapper userMapper;
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<User> userList = findUsersUseCase.getAllUsers();
+        List<UserResponse> userResponses = userList.stream().map(userMapper::toUserResponse).toList();
+        return ResponseEntity.ok(userResponses);
+    }
+
+}
