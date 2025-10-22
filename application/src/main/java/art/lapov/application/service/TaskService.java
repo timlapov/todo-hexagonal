@@ -37,7 +37,11 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public void deleteTask(TaskId id) {
-
+        try {
+            taskRepository.delete(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

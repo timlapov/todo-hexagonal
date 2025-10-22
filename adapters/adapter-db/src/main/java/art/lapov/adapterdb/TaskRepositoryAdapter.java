@@ -49,6 +49,6 @@ public class TaskRepositoryAdapter implements TaskRepository {
 
     @Override
     public void delete(TaskId id) {
-
+        taskJpaRepository.deleteById(id.getValue());
     }
 }
