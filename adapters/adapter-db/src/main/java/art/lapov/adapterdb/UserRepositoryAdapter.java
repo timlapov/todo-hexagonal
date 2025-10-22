@@ -6,6 +6,7 @@ import art.lapov.domain.port.out.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserRepositoryAdapter implements UserRepository {
@@ -26,7 +27,14 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public User getById(UserId id) {
+    public Optional<User> getById(UserId id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        Optional<UserEntity> userEntity = userJpaRepository.findById(id.getValue());
+        if (userEntity.isPresent()) {
+            return Optional.of(userMapper.toDomain(userEntity.get()));
+        }
         return null;
     }
 

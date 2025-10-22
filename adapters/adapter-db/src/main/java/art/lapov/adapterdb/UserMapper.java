@@ -7,7 +7,7 @@ public class UserMapper {
     public UserEntity toUserEntity(User user) {
         return new UserEntity(
                 user.getId().toString(),
-                user.getFirtName(),
+                user.getFirstName(),
                 user.getLastName(),
                 user.getEmail()
         );

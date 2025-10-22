@@ -10,6 +10,7 @@ import art.lapov.domain.port.in.UpdateUserUseCase;
 import art.lapov.domain.port.out.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateUserUseCase, DeleteUserUseCase {
 
@@ -39,8 +40,11 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
     }
 
     @Override
-    public User getUserById(UserId id) {
-        return null;
+    public Optional<User> getUserById(UserId id) {
+        if (id == null) {
+            return null;
+        }
+        return userRepository.getById(id);
     }
 
     @Override

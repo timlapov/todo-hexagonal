@@ -1,10 +1,7 @@
 package art.lapov.adapterweb;
 
-import art.lapov.application.dto.TaskResponse;
 import art.lapov.application.dto.UserResponse;
 import art.lapov.application.mapper.UserMapper;
-import art.lapov.domain.model.Task;
-import art.lapov.domain.model.TaskId;
 import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.in.CreateUserUseCase;
@@ -42,8 +39,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getOne(@PathVariable String id) {
-        User user = findUsersUseCase.getUserById(new UserId(id));
-        return ResponseEntity.ok(userMapper.toUserResponse(user));
+        Optional<User> user = findUsersUseCase.getUserById(new UserId(id));
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userMapper.toUserResponse(user.get()));
     }
 
 }

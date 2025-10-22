@@ -5,20 +5,20 @@ import java.util.UUID;
 
 public class User {
     UserId id;
-    String firtName;
+    String firstName;
     String lastName;
     String email;
 
-    public User(String firtName, String lastName, String email) {
+    public User(String firstName, String lastName, String email) {
         this.id = new UserId(UUID.randomUUID().toString());
-        this.firtName = firtName;
+        this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public User(UserId id, String firtName, String lastName, String email) {
+    public User(UserId id, String firstName, String lastName, String email) {
         this.id = id;
-        this.firtName = firtName;
+        this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
@@ -34,12 +34,12 @@ public class User {
         this.id = id;
     }
 
-    public String getFirtName() {
-        return firtName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirtName(String firtName) {
-        this.firtName = firtName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
@@ -62,19 +62,19 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firtName, user.firtName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email);
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firtName, lastName, email);
+        return Objects.hash(id, firstName, lastName, email);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", firtName='" + firtName + '\'' +
+                ", firtName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 '}';

@@ -42,7 +42,10 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public Optional<Task> getTaskById(TaskId id) {
-            return taskRepository.getById(id);
+        if (id == null) {
+            return Optional.empty();
+        }
+        return taskRepository.getById(id);
     }
 
     @Override
