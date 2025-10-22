@@ -3,6 +3,7 @@ package art.lapov.adapterweb;
 import art.lapov.application.dto.CreateUserRequest;
 import art.lapov.application.dto.UserResponse;
 import art.lapov.application.mapper.UserMapper;
+import art.lapov.domain.model.TaskId;
 import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.in.CreateUserUseCase;
@@ -11,6 +12,7 @@ import art.lapov.domain.port.in.FindUsersUseCase;
 import art.lapov.domain.port.in.UpdateUserUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +51,12 @@ public class UserController {
     public ResponseEntity<UserResponse> create(@RequestBody @Valid CreateUserRequest request) {
         User user = createUserUseCase.createUser(request.getFirstName(), request.getLastName(), request.getEmail());
         return ResponseEntity.ok(userMapper.toUserResponse(user));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        deleteUserUseCase.deleteUser(new UserId(id));
     }
 
 }

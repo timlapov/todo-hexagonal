@@ -35,7 +35,7 @@ public class UserRepositoryAdapter implements UserRepository {
         if (userEntity.isPresent()) {
             return Optional.of(userMapper.toDomain(userEntity.get()));
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -47,6 +47,7 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public void delete(UserId id) {
-
+        userJpaRepository.deleteById(id.getValue());
     }
+
 }

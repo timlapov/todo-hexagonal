@@ -45,7 +45,7 @@ class TaskController {
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getOne(@PathVariable String id) {
         Optional<Task> task = findTasksUseCase.getTaskById(new TaskId(id));
-        if (!task.isPresent()) {
+        if (task.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(taskMapper.toTaskResponse(task.get()));

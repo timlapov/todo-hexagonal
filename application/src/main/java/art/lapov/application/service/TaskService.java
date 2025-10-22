@@ -1,17 +1,16 @@
 package art.lapov.application.service;
 
 import art.lapov.application.mapper.TaskMapper;
-import art.lapov.domain.model.Task;
-import art.lapov.domain.model.TaskId;
-import art.lapov.domain.model.TaskStatus;
-import art.lapov.domain.model.UserId;
+import art.lapov.domain.model.*;
 import art.lapov.domain.port.in.CreateTaskUseCase;
 import art.lapov.domain.port.in.DeleteTaskUseCase;
 import art.lapov.domain.port.in.FindTasksUseCase;
 import art.lapov.domain.port.in.UpdateTaskUserCase;
 import art.lapov.domain.port.out.TaskRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,18 +36,15 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public void deleteTask(TaskId id) {
-        try {
-            taskRepository.delete(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        checkIdIsNotNull(id);
+        checkTaskExists(id);
+        taskRepository.delete(id);
     }
 
     @Override
     public Optional<Task> getTaskById(TaskId id) {
-        if (id == null) {
-            return Optional.empty();
-        }
+        checkIdIsNotNull(id);
+        checkTaskExists(id);
         return taskRepository.getById(id);
     }
 
@@ -78,6 +74,20 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
         }
         if (userId == null) {
             throw new IllegalArgumentException("User id is required");
+        }
+    }
+
+    private void checkTaskExists(TaskId id) {
+        checkIdIsNotNull(id);
+        Optional<Task> task = taskRepository.getById(id);
+        if (task.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with id " + id + " not found");
+        }
+    }
+
+    private static void checkIdIsNotNull(TaskId id) {
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task id is required");
         }
     }
 

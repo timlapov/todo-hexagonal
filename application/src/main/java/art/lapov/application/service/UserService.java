@@ -8,6 +8,8 @@ import art.lapov.domain.port.in.DeleteUserUseCase;
 import art.lapov.domain.port.in.FindUsersUseCase;
 import art.lapov.domain.port.in.UpdateUserUseCase;
 import art.lapov.domain.port.out.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,14 +26,16 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     @Override
     public User createUser(String firstName, String lastName, String email) {
-        validateCreateUserRequest(email);
+        checkEmailIsNotNullAndIsNotBlank(email);
         User user = new User(firstName, lastName, email);
         return userRepository.save(user);
     }
 
     @Override
     public void deleteUser(UserId id) {
-
+        validateDeleteUserRequest(id);
+        checkUserExists(id);
+        userRepository.delete(id);
     }
 
     @Override
@@ -41,20 +45,42 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     @Override
     public Optional<User> getUserById(UserId id) {
-        if (id == null) {
-            return null;
-        }
+        checkIdIsNotNull(id);
         return userRepository.getById(id);
     }
 
+    private static void checkIdIsNotNull(UserId id) {
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id is required");
+        }
+    }
+
     @Override
-    public User updateUser(UserId id, String firtName, String lastName, String email) {
+    public User updateUser(UserId id, String firstName, String lastName, String email) {
+        checkUserExists(id);
+        validateUpdateUserRequest(email, id);
         return null;
     }
 
-    private void validateCreateUserRequest(String email) {
+    private static void checkEmailIsNotNullAndIsNotBlank(String email) {
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("User email is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email is required");
+        }
+    }
+
+    private void validateUpdateUserRequest(String email, UserId id) {
+        checkEmailIsNotNullAndIsNotBlank(email);
+        checkIdIsNotNull(id);
+    }
+    private void validateDeleteUserRequest(UserId id) {
+        checkIdIsNotNull(id);
+    }
+
+    private void checkUserExists(UserId id) {
+        checkIdIsNotNull(id);
+        Optional<User> user = userRepository.getById(id);
+        if (user.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + id + " not found");
         }
     }
 }
