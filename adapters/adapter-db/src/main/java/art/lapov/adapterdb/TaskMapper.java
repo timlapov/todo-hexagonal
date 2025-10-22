@@ -2,6 +2,8 @@ package art.lapov.adapterdb;
 
 import art.lapov.domain.model.Task;
 
+import java.util.Optional;
+
 public class TaskMapper {
 
         public TaskEntity toTaskEntity(Task task) {
@@ -26,6 +28,18 @@ public class TaskMapper {
                 entity.getUpdatedAt(),
                 entity.getUserId()
         );
+    }
+
+    public Optional<Task> toDomain(Optional<TaskEntity> entity) {
+        return entity.map(e -> new Task(
+                e.getId(),
+                e.getName(),
+                e.getDescription(),
+                e.getStatus(),
+                e.getCreatedAt(),
+                e.getUpdatedAt(),
+                e.getUserId()
+        ));
     }
 
 }

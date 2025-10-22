@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,11 +41,8 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
     }
 
     @Override
-    public Task getTaskById(TaskId id) {
-        if (id != null) {
-            return taskRepository.getById(id).orElse(null);
-        }
-        return null;
+    public Optional<Task> getTaskById(TaskId id) {
+            return taskRepository.getById(id);
     }
 
     @Override

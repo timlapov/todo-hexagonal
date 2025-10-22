@@ -28,7 +28,11 @@ public class TaskRepositoryAdapter implements TaskRepository {
 
     @Override
     public Optional<Task> getById(TaskId id) {
-        return Optional.empty();
+        if (id == null) {
+            return Optional.empty();
+        }
+        Optional<TaskEntity> taskEntity = taskJpaRepository.findById(id.getValue());
+        return taskMapper.toDomain(taskEntity);
     }
 
     @Override
