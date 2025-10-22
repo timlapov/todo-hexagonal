@@ -23,9 +23,9 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
     }
 
     @Override
-    public User createUser(String firtName, String lastName, String email) {
+    public User createUser(String firstName, String lastName, String email) {
         validateCreateUserRequest(email);
-        User user = new User(firtName, lastName, email);
+        User user = new User(firstName, lastName, email);
         return userRepository.save(user);
     }
 

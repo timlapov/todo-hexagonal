@@ -1,5 +1,6 @@
 package art.lapov.adapterweb;
 
+import art.lapov.application.dto.CreateUserRequest;
 import art.lapov.application.dto.UserResponse;
 import art.lapov.application.mapper.UserMapper;
 import art.lapov.domain.model.User;
@@ -8,12 +9,10 @@ import art.lapov.domain.port.in.CreateUserUseCase;
 import art.lapov.domain.port.in.DeleteUserUseCase;
 import art.lapov.domain.port.in.FindUsersUseCase;
 import art.lapov.domain.port.in.UpdateUserUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +43,12 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(userMapper.toUserResponse(user.get()));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponse> create(@RequestBody @Valid CreateUserRequest request) {
+        User user = createUserUseCase.createUser(request.getFirstName(), request.getLastName(), request.getEmail());
+        return ResponseEntity.ok(userMapper.toUserResponse(user));
     }
 
 }

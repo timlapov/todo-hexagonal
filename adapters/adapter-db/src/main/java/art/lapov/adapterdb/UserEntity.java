@@ -17,7 +17,7 @@ public class UserEntity {
     @Id
     private String id;
 
-    private String firtName;
+    private String firstName;
 
     private String lastName;
 
