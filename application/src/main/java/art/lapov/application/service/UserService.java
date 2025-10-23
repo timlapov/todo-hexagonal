@@ -33,7 +33,7 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     @Override
     public void deleteUser(UserId id) {
-        validateDeleteUserRequest(id);
+        checkIdIsNotNull(id);
         checkUserExists(id);
         userRepository.delete(id);
     }
@@ -49,17 +49,17 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
         return userRepository.getById(id);
     }
 
-    private static void checkIdIsNotNull(UserId id) {
-        if (id == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id is required");
-        }
-    }
-
     @Override
     public User updateUser(UserId id, String firstName, String lastName, String email) {
         checkUserExists(id);
         validateUpdateUserRequest(email, id);
         return null;
+    }
+
+    private static void checkIdIsNotNull(UserId id) {
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id is required");
+        }
     }
 
     private static void checkEmailIsNotNullAndIsNotBlank(String email) {
@@ -70,9 +70,6 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     private void validateUpdateUserRequest(String email, UserId id) {
         checkEmailIsNotNullAndIsNotBlank(email);
-        checkIdIsNotNull(id);
-    }
-    private void validateDeleteUserRequest(UserId id) {
         checkIdIsNotNull(id);
     }
 

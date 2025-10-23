@@ -50,7 +50,10 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public List<Task> getTasksByUserId(UserId userId) {
-        return List.of();
+        if (userId == null || userId.getValue().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id is required");
+        }
+        return taskRepository.getByUserId(userId.getValue());
     }
 
     @Override

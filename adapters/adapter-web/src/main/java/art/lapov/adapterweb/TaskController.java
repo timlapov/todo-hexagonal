@@ -63,4 +63,10 @@ class TaskController {
         deleteTaskUseCase.deleteTask(new TaskId(id));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TaskResponse>> getByUser(@PathVariable String userId) {
+        List<Task> tasks = findTasksUseCase.getTasksByUserId(new UserId(userId));
+        return ResponseEntity.ok(tasks.stream().map(taskMapper::toTaskResponse).toList());
+    }
+
 }

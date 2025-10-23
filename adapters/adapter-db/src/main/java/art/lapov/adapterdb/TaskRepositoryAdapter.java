@@ -44,7 +44,9 @@ public class TaskRepositoryAdapter implements TaskRepository {
 
     @Override
     public List<Task> getByUserId(String userId) {
-        return List.of();
+        return taskJpaRepository.findAllByUserId(userId).stream()
+                .map(taskMapper::toDomain)
+                .toList();
     }
 
     @Override
