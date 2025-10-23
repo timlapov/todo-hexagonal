@@ -60,7 +60,7 @@ public class UserController {
         deleteUserUseCase.deleteUser(new UserId(id));
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable String id, @RequestBody @Valid UpdateUserRequest request) {
         User user = updateUserUseCase.updateUser(new UserId(id), request.getFirstName(), request.getLastName(), request.getEmail());
         return ResponseEntity.ok(userMapper.toUserResponse(user));

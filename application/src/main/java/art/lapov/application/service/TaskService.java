@@ -63,7 +63,14 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public Task updateTaskDetails(TaskId id, String name, String description) {
-        return null;
+        checkIdIsNotNull(id);
+        checkTaskExists(id);
+        Task task = taskRepository.getById(id).orElseThrow();
+        if (name != null && description != null) {
+            task.update(name, description);
+            return taskRepository.save(task);
+        }
+        throw new IllegalArgumentException("Task name and description are required");
     }
 
     @Override

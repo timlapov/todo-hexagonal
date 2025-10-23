@@ -2,6 +2,7 @@ package art.lapov.adapterweb;
 
 import art.lapov.application.dto.CreateTaskRequest;
 import art.lapov.application.dto.TaskResponse;
+import art.lapov.application.dto.UpdateTaskRequest;
 import art.lapov.application.mapper.TaskMapper;
 import art.lapov.domain.model.Task;
 import art.lapov.domain.model.TaskId;
@@ -72,9 +73,9 @@ class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskResponse> updateTaskDetails(@PathVariable String id, @RequestBody @Valid CreateTaskRequest request) {
-
-        return ResponseEntity.ok(null);
+    public ResponseEntity<TaskResponse> updateTaskDetails(@PathVariable String id, @RequestBody @Valid UpdateTaskRequest request) {
+        Task task = updateTaskUserCase.updateTaskDetails(new TaskId(id), request.getName(), request.getDescription());
+        return ResponseEntity.ok(taskMapper.toTaskResponse(task));
     }
 
     @PatchMapping("/{id}/status")
