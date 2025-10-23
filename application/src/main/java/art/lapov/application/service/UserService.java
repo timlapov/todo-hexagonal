@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateUserUseCase, DeleteUserUseCase {
 
@@ -27,7 +28,7 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     @Override
     public User createUser(String firstName, String lastName, String email) {
-        checkEmailIsNotNullAndIsNotBlank(email);
+        checkEmailIsValid(email);
         User user = new User(firstName, lastName, email);
         return userRepository.save(user);
     }
@@ -52,7 +53,6 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     @Override
     public User updateUser(UserId id, String firstName, String lastName, String email) {
-        checkUserExists(id);
         validateUpdateUserRequest(email, id);
         checkUserExists(id);
         User user = userRepository.getById(id).orElseThrow();
@@ -72,14 +72,20 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
         }
     }
 
-    private static void checkEmailIsNotNullAndIsNotBlank(String email) {
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+
+    private void checkEmailIsValid(String email) {
         if (email == null || email.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email is required");
+            throw new IllegalArgumentException("Email is required");
+        }
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email format");
         }
     }
 
     private void validateUpdateUserRequest(String email, UserId id) {
-        checkEmailIsNotNullAndIsNotBlank(email);
+        checkEmailIsValid(email);
         checkIdIsNotNull(id);
     }
 

@@ -30,7 +30,7 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
     @Override
     public Task createTask(String name, String description, UserId userId) {
         validateCreateRequest(name, userId);
-        Task task = new Task(name, description, userId.toString());
+        Task task = new Task(name, description, userId.getValue());
         return taskRepository.save(task);
     }
 
