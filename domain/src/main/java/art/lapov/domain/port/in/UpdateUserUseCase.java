@@ -4,5 +4,5 @@ import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 
 public interface UpdateUserUseCase {
-    User updateUser(UserId id, String firtName, String lastName, String email);
+    User updateUser(UserId id, String firstName, String lastName, String email);
 }

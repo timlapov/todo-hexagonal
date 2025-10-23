@@ -1,6 +1,7 @@
 package art.lapov.application.service;
 
 import art.lapov.application.mapper.UserMapper;
+import art.lapov.domain.exception.UserNotFoundException;
 import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.in.CreateUserUseCase;
@@ -53,7 +54,16 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
     public User updateUser(UserId id, String firstName, String lastName, String email) {
         checkUserExists(id);
         validateUpdateUserRequest(email, id);
-        return null;
+        checkUserExists(id);
+        User user = userRepository.getById(id).orElseThrow();
+        user.setEmail(email);
+        if (firstName != null) {
+            user.setFirstName(firstName);
+        }
+        if (lastName != null) {
+            user.setLastName(lastName);
+        }
+        return userRepository.save(user);
     }
 
     private static void checkIdIsNotNull(UserId id) {

@@ -68,7 +68,16 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public Task updateTaskStatus(TaskId id, TaskStatus status) {
-        return null;
+        checkIdIsNotNull(id);
+        checkTaskExists(id);
+        Task task = taskRepository.getById(id).orElseThrow();
+        switch (status) {
+            case COMPLETED -> task.complete();
+            case CANCELLED -> task.cancel();
+            case IN_PROGRESS -> task.inProgress();
+            default -> throw new IllegalArgumentException("Invalid task status");
+        }
+        return taskRepository.save(task);
     }
 
     private void validateCreateRequest(String name, UserId userId) {

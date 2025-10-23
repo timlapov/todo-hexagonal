@@ -5,6 +5,7 @@ import art.lapov.application.dto.TaskResponse;
 import art.lapov.application.mapper.TaskMapper;
 import art.lapov.domain.model.Task;
 import art.lapov.domain.model.TaskId;
+import art.lapov.domain.model.TaskStatus;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.in.CreateTaskUseCase;
 import art.lapov.domain.port.in.DeleteTaskUseCase;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +69,21 @@ class TaskController {
     public ResponseEntity<List<TaskResponse>> getByUser(@PathVariable String userId) {
         List<Task> tasks = findTasksUseCase.getTasksByUserId(new UserId(userId));
         return ResponseEntity.ok(tasks.stream().map(taskMapper::toTaskResponse).toList());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponse> updateTaskDetails(@PathVariable String id, @RequestBody @Valid CreateTaskRequest request) {
+
+        return ResponseEntity.ok(null);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TaskResponse> updateTaskStatus(@PathVariable String id, @RequestParam TaskStatus status) {
+        Task task = updateTaskUserCase.updateTaskStatus(new TaskId(id), status);
+        if (task != null) {
+            return ResponseEntity.ok(taskMapper.toTaskResponse(task));
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with id " + id + " not found");
     }
 
 }
