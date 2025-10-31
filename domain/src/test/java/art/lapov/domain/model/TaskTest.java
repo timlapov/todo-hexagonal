@@ -1,6 +1,7 @@
 package art.lapov.domain.model;
 
 import art.lapov.domain.exception.InvalidInputException;
+import art.lapov.domain.exception.InvalidTaskStatusException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -83,7 +84,7 @@ public class TaskTest {
         task.cancel();
 
 //        Then
-        assertThrows(IllegalStateException.class, task::inProgress);
+        assertThrows(InvalidTaskStatusException.class, task::inProgress);
     }
 
     @Test
@@ -94,7 +95,7 @@ public class TaskTest {
         task.complete();
 
 //        Then
-        assertThrows(IllegalStateException.class, task::inProgress);
+        assertThrows(InvalidTaskStatusException.class, task::inProgress);
     }
 
     @Test
@@ -110,10 +111,4 @@ public class TaskTest {
         assertThrows(InvalidInputException.class, () -> new Task(null, "TaskDescription", UUID.randomUUID().toString()));
     }
 
-    @Test
-    @DisplayName("A new task should not be created with invalid description")
-    void shouldNotCreateNewTaskWithInvalidDescription() {
-        assertThrows(InvalidInputException.class, () -> new Task("TaskName", " ", UUID.randomUUID().toString()));
-        assertThrows(InvalidInputException.class, () -> new Task("TaskName", null, UUID.randomUUID().toString()));
-    }
 }

@@ -1,6 +1,7 @@
 package art.lapov.domain.model;
 
 import art.lapov.domain.exception.InvalidInputException;
+import art.lapov.domain.exception.InvalidTaskStatusException;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -15,17 +16,12 @@ public class Task {
     private final UserId userId;
 
     public Task(String name, String description, String userId) {
-        this.id = new TaskId(UUID.randomUUID().toString());
-        if (name != null && !name.isBlank()) {
-            this.name = name;
-        } else {
+        if (name == null || name.isBlank()) {
             throw new InvalidInputException("Task name is required");
         }
-        if (description != null && !description.isBlank()) {
-            this.description = description;
-        } else {
-            throw new InvalidInputException("Task description is required");
-        }
+        this.id = new TaskId(UUID.randomUUID().toString());
+        this.name = name;
+        this.description = description;
         this.status = TaskStatus.OPEN.name();
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
@@ -33,6 +29,9 @@ public class Task {
     }
 
     public Task(String id, String name, String description, String status, Instant createdAt, Instant updatedAt, String userId) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidInputException("Task name is required");
+        }
         this.id = new TaskId(id);
         this.name = name;
         this.description = description;
@@ -65,12 +64,11 @@ public class Task {
     }
 
     public void inProgress() {
-        if (this.status.equals(TaskStatus.OPEN.name())) {
-            this.status = TaskStatus.IN_PROGRESS.name();
-            this.updatedAt = Instant.now();
-        } else {
-            throw new IllegalStateException("Task is not open");
+        if (!this.status.equals(TaskStatus.OPEN.name())) {
+            throw new InvalidTaskStatusException("Task is not open");
         }
+        this.status = TaskStatus.IN_PROGRESS.name();
+        this.updatedAt = Instant.now();
     }
 
     public void isOwner(UserId userId) {
@@ -80,6 +78,9 @@ public class Task {
     }
 
     public void update(String name, String description) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidInputException("Task name is required");
+        }
         this.name = name;
         this.description = description;
         this.updatedAt = Instant.now();

@@ -25,7 +25,6 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     @Override
     public Task createTask(String name, String description, UserId userId) {
-        validateCreateRequest(name, userId);
         Task task = new Task(name, description, userId.getValue());
         return taskRepository.save(task);
     }
@@ -78,15 +77,6 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
             default -> throw new IllegalArgumentException("Invalid task status");
         }
         return taskRepository.save(task);
-    }
-
-    private void validateCreateRequest(String name, UserId userId) {
-        if (name == null || name.isBlank()) {
-            throw new InvalidInputException("Task name is required");
-        }
-        if (userId == null) {
-            throw new InvalidInputException("User id is required");
-        }
     }
 
     private static void checkIdIsNotNull(TaskId id) {
