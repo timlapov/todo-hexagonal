@@ -1,7 +1,6 @@
 package art.lapov.application.service;
 
 import art.lapov.application.mapper.UserMapper;
-import art.lapov.domain.exception.UserNotFoundException;
 import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.in.CreateUserUseCase;
