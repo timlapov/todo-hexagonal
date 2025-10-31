@@ -1,6 +1,7 @@
 package art.lapov.application.service;
 
 import art.lapov.application.mapper.TaskMapper;
+import art.lapov.domain.exception.InvalidInputException;
 import art.lapov.domain.model.*;
 import art.lapov.domain.port.in.CreateTaskUseCase;
 import art.lapov.domain.port.in.DeleteTaskUseCase;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateTaskUserCase, DeleteTaskUseCase {
 
@@ -33,14 +33,13 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
     @Override
     public void deleteTask(TaskId id) {
         checkIdIsNotNull(id);
-        checkTaskExists(id);
+        taskRepository.getById(id);
         taskRepository.delete(id);
     }
 
     @Override
-    public Optional<Task> getTaskById(TaskId id) {
+    public Task getTaskById(TaskId id) {
         checkIdIsNotNull(id);
-        checkTaskExists(id);
         return taskRepository.getById(id);
     }
 
@@ -60,8 +59,7 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
     @Override
     public Task updateTaskDetails(TaskId id, String name, String description) {
         checkIdIsNotNull(id);
-        checkTaskExists(id);
-        Task task = taskRepository.getById(id).orElseThrow();
+        Task task = taskRepository.getById(id);
         if (name != null && description != null) {
             task.update(name, description);
             return taskRepository.save(task);
@@ -72,8 +70,7 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
     @Override
     public Task updateTaskStatus(TaskId id, TaskStatus status) {
         checkIdIsNotNull(id);
-        checkTaskExists(id);
-        Task task = taskRepository.getById(id).orElseThrow();
+        Task task = taskRepository.getById(id);
         switch (status) {
             case COMPLETED -> task.complete();
             case CANCELLED -> task.cancel();
@@ -85,24 +82,16 @@ public class TaskService implements CreateTaskUseCase, FindTasksUseCase, UpdateT
 
     private void validateCreateRequest(String name, UserId userId) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Task name is required");
+            throw new InvalidInputException("Task name is required");
         }
         if (userId == null) {
-            throw new IllegalArgumentException("User id is required");
-        }
-    }
-
-    private void checkTaskExists(TaskId id) {
-        checkIdIsNotNull(id);
-        Optional<Task> task = taskRepository.getById(id);
-        if (task.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with id " + id + " not found");
+            throw new InvalidInputException("User id is required");
         }
     }
 
     private static void checkIdIsNotNull(TaskId id) {
         if (id == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task id is required");
+            throw new InvalidInputException("Task id is required");
         }
     }
 

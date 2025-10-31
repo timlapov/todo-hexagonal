@@ -41,11 +41,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getOne(@PathVariable String id) {
-        Optional<User> user = findUsersUseCase.getUserById(new UserId(id));
-        if (!user.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(userMapper.toUserResponse(user.get()));
+        User user = findUsersUseCase.getUserById(new UserId(id));
+        return ResponseEntity.ok(userMapper.toUserResponse(user));
     }
 
     @PostMapping

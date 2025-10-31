@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface FindUsersUseCase {
     List<User> getAllUsers();
-    Optional<User> getUserById(UserId id);
+    User getUserById(UserId id);
 }

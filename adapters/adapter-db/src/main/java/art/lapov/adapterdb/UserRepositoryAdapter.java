@@ -1,5 +1,7 @@
 package art.lapov.adapterdb;
 
+import art.lapov.domain.exception.InvalidInputException;
+import art.lapov.domain.exception.UserNotFoundException;
 import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.out.UserRepository;
@@ -27,15 +29,13 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public Optional<User> getById(UserId id) {
+    public User getById(UserId id) {
         if (id == null) {
-            return Optional.empty();
+            throw new InvalidInputException("User id is required");
         }
-        Optional<UserEntity> userEntity = userJpaRepository.findById(id.getValue());
-        if (userEntity.isPresent()) {
-            return Optional.of(userMapper.toDomain(userEntity.get()));
-        }
-        return Optional.empty();
+        return userJpaRepository.findById(id.getValue())
+                .map(userMapper::toDomain)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
     }
 
     @Override

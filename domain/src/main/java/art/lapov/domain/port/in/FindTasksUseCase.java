@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FindTasksUseCase {
-    Optional<Task> getTaskById(TaskId id);
+    Task getTaskById(TaskId id);
     List<Task> getTasksByUserId(UserId userId);
     List<Task> getAllTasks();
 }

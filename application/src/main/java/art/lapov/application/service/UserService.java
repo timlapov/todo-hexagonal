@@ -1,6 +1,8 @@
 package art.lapov.application.service;
 
 import art.lapov.application.mapper.UserMapper;
+import art.lapov.domain.exception.InvalidEmailException;
+import art.lapov.domain.exception.InvalidInputException;
 import art.lapov.domain.model.User;
 import art.lapov.domain.model.UserId;
 import art.lapov.domain.port.in.CreateUserUseCase;
@@ -8,11 +10,8 @@ import art.lapov.domain.port.in.DeleteUserUseCase;
 import art.lapov.domain.port.in.FindUsersUseCase;
 import art.lapov.domain.port.in.UpdateUserUseCase;
 import art.lapov.domain.port.out.UserRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateUserUseCase, DeleteUserUseCase {
@@ -35,7 +34,7 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
     @Override
     public void deleteUser(UserId id) {
         checkIdIsNotNull(id);
-        checkUserExists(id);
+        userRepository.getById(id);
         userRepository.delete(id);
     }
 
@@ -45,7 +44,7 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
     }
 
     @Override
-    public Optional<User> getUserById(UserId id) {
+    public User getUserById(UserId id) {
         checkIdIsNotNull(id);
         return userRepository.getById(id);
     }
@@ -53,8 +52,7 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
     @Override
     public User updateUser(UserId id, String firstName, String lastName, String email) {
         validateUpdateUserRequest(email, id);
-        checkUserExists(id);
-        User user = userRepository.getById(id).orElseThrow();
+        User user = userRepository.getById(id);
         user.setEmail(email);
         if (firstName != null) {
             user.setFirstName(firstName);
@@ -67,7 +65,7 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     private static void checkIdIsNotNull(UserId id) {
         if (id == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User id is required");
+            throw new InvalidInputException("User id is required");
         }
     }
 
@@ -76,10 +74,10 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
 
     private void checkEmailIsValid(String email) {
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email is required");
+            throw new InvalidInputException("Email is required");
         }
         if (!EMAIL_PATTERN.matcher(email).matches()) {
-            throw new IllegalArgumentException("Invalid email format");
+            throw new InvalidEmailException("Email is invalid");
         }
     }
 
@@ -88,11 +86,4 @@ public class UserService implements CreateUserUseCase, FindUsersUseCase, UpdateU
         checkIdIsNotNull(id);
     }
 
-    private void checkUserExists(UserId id) {
-        checkIdIsNotNull(id);
-        Optional<User> user = userRepository.getById(id);
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + id + " not found");
-        }
-    }
 }

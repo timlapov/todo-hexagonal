@@ -4,6 +4,7 @@ import art.lapov.application.dto.CreateTaskRequest;
 import art.lapov.application.dto.TaskResponse;
 import art.lapov.application.dto.UpdateTaskRequest;
 import art.lapov.application.mapper.TaskMapper;
+import art.lapov.domain.exception.TaskNotFoundException;
 import art.lapov.domain.model.Task;
 import art.lapov.domain.model.TaskId;
 import art.lapov.domain.model.TaskStatus;
@@ -40,18 +41,15 @@ class TaskController {
                 .map(taskMapper::toTaskResponse)
                 .toList();
         if (taskResponses.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new TaskNotFoundException("No tasks found");
         }
         return ResponseEntity.ok(taskResponses);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getOne(@PathVariable String id) {
-        Optional<Task> task = findTasksUseCase.getTaskById(new TaskId(id));
-        if (task.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(taskMapper.toTaskResponse(task.get()));
+        Task task = findTasksUseCase.getTaskById(new TaskId(id));
+        return ResponseEntity.ok(taskMapper.toTaskResponse(task));
     }
 
     @PostMapping

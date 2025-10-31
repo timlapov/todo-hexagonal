@@ -1,6 +1,5 @@
 package art.lapov.adapterdb;
 
-import art.lapov.domain.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,12 +1,13 @@
 package art.lapov.adapterdb;
 
+import art.lapov.domain.exception.InvalidInputException;
+import art.lapov.domain.exception.TaskNotFoundException;
 import art.lapov.domain.model.Task;
 import art.lapov.domain.model.TaskId;
 import art.lapov.domain.port.out.TaskRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class TaskRepositoryAdapter implements TaskRepository {
@@ -27,12 +28,13 @@ public class TaskRepositoryAdapter implements TaskRepository {
     }
 
     @Override
-    public Optional<Task> getById(TaskId id) {
+    public Task getById(TaskId id) {
         if (id == null) {
-            return Optional.empty();
+            throw new InvalidInputException("Task id is required");
         }
-        Optional<TaskEntity> taskEntity = taskJpaRepository.findById(id.getValue());
-        return taskMapper.toDomain(taskEntity);
+        return taskJpaRepository.findById(id.getValue())
+                .map(taskMapper::toDomain)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
     }
 
     @Override
