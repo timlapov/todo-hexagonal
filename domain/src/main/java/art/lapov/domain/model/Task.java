@@ -1,5 +1,7 @@
 package art.lapov.domain.model;
 
+import art.lapov.domain.exception.InvalidInputException;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -14,8 +16,16 @@ public class Task {
 
     public Task(String name, String description, String userId) {
         this.id = new TaskId(UUID.randomUUID().toString());
-        this.name = name;
-        this.description = description;
+        if (name != null && !name.isBlank()) {
+            this.name = name;
+        } else {
+            throw new InvalidInputException("Task name is required");
+        }
+        if (description != null && !description.isBlank()) {
+            this.description = description;
+        } else {
+            throw new InvalidInputException("Task description is required");
+        }
         this.status = TaskStatus.OPEN.name();
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
@@ -35,6 +45,9 @@ public class Task {
     public void complete() {
         if (this.status.equals(TaskStatus.COMPLETED.name())) {
             throw new IllegalStateException("Task is already completed");
+        }
+        if (this.status.equals(TaskStatus.CANCELLED.name())) {
+            throw new IllegalStateException("Task is already cancelled");
         }
         this.status = TaskStatus.COMPLETED.name();
         this.updatedAt = Instant.now();

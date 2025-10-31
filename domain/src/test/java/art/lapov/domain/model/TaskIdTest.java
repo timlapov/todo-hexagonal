@@ -112,7 +112,7 @@ class TaskIdTest {
         TaskId taskId = new TaskId(UUID.randomUUID().toString());
 
         // When & Then
-        assertThat(taskId).isEqualTo(taskId);
+        assertEquals(taskId, taskId);
     }
 
     @Test
